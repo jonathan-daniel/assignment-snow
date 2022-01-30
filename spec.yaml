@@ -1,0 +1,275 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Assignment"
+schemes:
+- "https"
+paths:
+  /bugs:
+    post:
+      tags:
+      - "bugs"
+      summary: "Add a new bug"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "title"
+          - "body"
+          - "status"
+          properties:
+            title:
+              type: "string"
+            body:
+              type: "string"
+            status:
+              type: "string"
+              enum:
+              - "resolved"
+              - "unresolved"
+            assigned_user_id:
+              type: "string"
+      responses:
+        "201":
+          description: "Bug created"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+              body:
+                type: "string"
+              title:
+                type: "string"
+              status:
+                type: "string"
+                enum:
+                - "resolved"
+                - "unresolved"
+              comments:
+                type: "integer"
+              assigned_user_id:
+                type: "string"
+        "400":
+          description: "Invalid input"
+    get:
+      tags:
+      - "bugs"
+      summary: "List all bugs"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "status"
+        type: "string"
+        enum:
+          - "resolved"
+          - "unresolved"
+        description: "Optional: only retrieve bugs with given status"
+      responses:
+        "200":
+          description: "list of bugs"
+          schema:
+            type: "array"
+            items:
+              type: object
+              properties:
+                id:
+                  type: "string"
+                body:
+                  type: "string"
+                title:
+                  type: "string"
+                status:
+                  type: "string"
+                  enum:
+                  - "resolved"
+                  - "unresolved"
+                comments:
+                  type: "integer"
+                assigned_user_id:
+                  type: "string"
+  /bugs/{id}:    
+    put:
+      tags:
+      - "bugs"
+      summary: "Update a bug"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "bug that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            title:
+              type: "string"
+            body:
+              type: "string"
+            status:
+              type: "string"
+              enum:
+              - "resolved"
+              - "unresolved"
+            assigned_user_id:
+                type: "string"
+      responses:
+        "200":
+          description: "Bug updated"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+              body:
+                type: "string"
+              title:
+                type: "string"
+              status:
+                type: "string"
+                enum:
+                - "resolved"
+                - "unresolved"
+              comments:
+                type: "integer"
+              assigned_user_id:
+                type: "string"
+        "400":
+          description: "Invalid input"
+    delete:
+      tags:
+      - "bugs"
+      summary: "Delete a bug"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "bug that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        "204":
+          description: "Bug deleted"
+    get:
+      tags:
+      - "bugs"
+      summary: "Retrieve a specific bug"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "bug that need to be updated"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "The requested bug"
+          schema:
+            type: object
+            properties:
+              id:
+                type: "string"
+              body:
+                type: "string"
+              title:
+                type: "string"
+              status:
+                type: "string"
+                enum:
+                - "resolved"
+                - "unresolved"
+              comments:
+                type: "integer"
+              assigned_user_id:
+                type: "string"
+  /bugs/{id}/comments:
+    post:
+      tags:
+      - "comments"
+      summary: "Add a new comment"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "bug ID that the comment belongs to"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "title"
+          - "body"
+          properties:
+            title:
+              type: "string"
+            body:
+              type: "string"
+      responses:
+        "201":
+          description: "Comment created"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+              bug_id:
+                type: "string"
+              body:
+                type: "string"
+              title:
+                type: "string"
+        "400":
+          description: "Invalid input"
+  /bugs/{id}/comments/{comment_id}:
+    delete:
+        tags:
+        - "comments"
+        summary: "Delete a comment"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - name: "id"
+          in: "path"
+          description: "bug ID that contains the comment to be deleted"
+          required: true
+          type: "string"
+        - name: "comment_id"
+          in: "path"
+          description: "comment ID that needs to be deleted"
+          required: true
+          type: "string"
+        responses:
+          "204":
+            description: "Comment deleted"
+  
